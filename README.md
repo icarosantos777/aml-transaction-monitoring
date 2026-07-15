@@ -4,9 +4,7 @@ MVP de ponta a ponta para monitoramento transacional AML/PLD, desenvolvido
 com Python, BigQuery e Looker Studio sobre aproximadamente 9,5 milhões de
 transações sintéticas do SAML-D.
 
-![Python](https://img.shields.io/badge/Python-Pandas-3776AB?logo=python&logoColor=white)
-![BigQuery](https://img.shields.io/badge/Google-BigQuery-4285F4?logo=googlebigquery&logoColor=white)
-![Looker Studio](https://img.shields.io/badge/Looker-Studio-4285F4?logo=looker&logoColor=white)
+Dashboards: 
 
 O projeto implementa duas regras SQL explicáveis, avalia seu desempenho sem
 target leakage e transforma os resultados em uma fila priorizada de alertas
