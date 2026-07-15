@@ -1,18 +1,18 @@
 # AML Transaction Monitoring — SAML-D
 
-MVP de monitoramento transacional AML/PLD construído com Python, BigQuery e Looker Studio, sobre o dataset sintético SAML-D (~9,5 milhões de transações).
+MVP de ponta a ponta para monitoramento transacional AML/PLD, desenvolvido
+com Python, BigQuery e Looker Studio sobre aproximadamente 9,5 milhões de
+transações sintéticas do SAML-D.
 
 ![Python](https://img.shields.io/badge/Python-Pandas-3776AB?logo=python&logoColor=white)
 ![BigQuery](https://img.shields.io/badge/Google-BigQuery-4285F4?logo=googlebigquery&logoColor=white)
 ![Looker Studio](https://img.shields.io/badge/Looker-Studio-4285F4?logo=looker&logoColor=white)
 
----
+O projeto implementa duas regras SQL explicáveis, avalia seu desempenho sem
+target leakage e transforma os resultados em uma fila priorizada de alertas
+para investigação humana.
 
-## O que é
-
-Um pipeline completo de monitoramento transacional: os dados brutos entram no BigQuery, passam por uma camada de staging tipada, duas regras de detecção geram alertas, e o resultado é avaliado contra os rótulos do dataset e apresentado em um dashboard no Looker Studio.
-
-As regras são SQL determinístico. Não há modelo de machine learning nem LLM decidindo o que vira alerta — a ideia era construir algo que um analista de compliance consiga auditar linha a linha e defender perante um regulador. Usei Claude Code como apoio no desenvolvimento (revisão de queries, organização do repositório, documentação), mas toda a lógica de negócio, calibração de limiares e validação de resultados foram feitas manualmente no BigQuery.
+A ideia era construir regras transparentes, que um analista de compliance pudesse revisar, explicar e auditar linha a linha. Usei Claude Code como apoio no desenvolvimento (revisão de queries, organização do repositório, documentação), Todas as consultas foram executadas no BigQuery, e os resultados, limiares e decisões finais foram revisados e validados por mim.
 
 ## Resultados
 
@@ -113,7 +113,7 @@ Instruções detalhadas estão em `docs/GUIA_REPRODUCAO_PTBR.md`.
 
 ## Limitações
 
-O dataset é sintético e não traz dados de KYC nem taxas de câmbio, então as regras agregam valores em moedas diferentes como se fossem comparáveis e os limiares foram calibrados especificamente para esta base — não devem ser transportados para produção sem recalibração. As regras também não constroem baseline de comportamento por conta (o que ajudaria muito a derrubar falsos positivos) nem seguem o dinheiro por múltiplos saltos na rede de contas, o que deixa de fora tipologias como layering em cadeia.
+O dataset não tem conversão de moedas. Por isso, as regras analisam cada moeda separadamente. Mesmo assim, os mesmos limites são usados para moedas diferentes, o que precisaria ser ajustado em um sistema real. 
 
 ## Próximos passos
 
