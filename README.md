@@ -102,4 +102,4 @@ O dataset não tem conversão de moedas. Por isso, as regras analisam cada moeda
 
 ## Próximos passos
 
-Em ordem de impacto provável sobre a precision: baseline comportamental por conta, normalização cambial e parametrização dos limiares para permitir tuning sistemático. Depois disso, análise de rede transacional (detecção de hubs e cadeias), execução agendada com alertas automáticos e testes de qualidade de dados no pipeline. Um uso interessante de IA generativa aqui seria resumir os casos já alertados para o analista — nunca decidir o alerta.
+Como próximos passos, o projeto poderia considerar o comportamento normal de cada conta, ajustar os valores entre moedas diferentes e tornar os limites das regras mais fáceis de testar. Também seria possível identificar redes de contas suspeitas, automatizar a execução e criar alertas. A IA poderia ajudar a resumir os casos para o analista, mas não decidir quais transações devem ser alertadas.
