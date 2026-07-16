@@ -89,7 +89,7 @@ aml-transaction-monitoring-saml-d/
 │   ├── 05_rule_evaluation.sql
 │   └── 06_dashboard_summary.sql
 ├── docs/
-│   ├── GUIA_REPRODUCAO_PTBR.md
+│   ├── guia_reproducao.md
 │   └── DICIONARIO_DE_DADOS.md
 └── dashboard/
     ├── aml_dashboard.png
