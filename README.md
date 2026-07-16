@@ -96,17 +96,6 @@ aml-transaction-monitoring-saml-d/
     └── aml_transaction_monitoring_dashboard.pdf
 ```
 
-## Reprodução
-
-1. Rode o notebook para conferir a estrutura do CSV.
-2. Carregue o dataset no BigQuery e crie `raw_transactions`.
-3. Execute os SQLs na ordem numérica (`01` a `06`).
-4. Conecte o Looker Studio às tabelas `aml_monitoring.dashboard_summary` e `aml_monitoring.alerts`.
-
-Nos cards consolidados do dashboard, use o filtro `rule_name = ALL_RULES` com agregação `MAX`. Os valores esperados são os da tabela de resultados acima (9.504.852 transações, 9.873 ilícitas, 22.455 alertas).
-
-Instruções detalhadas estão em `docs/GUIA_REPRODUCAO_PTBR.md`.
-
 ## Limitações
 
 O dataset não tem conversão de moedas. Por isso, as regras analisam cada moeda separadamente. Mesmo assim, os mesmos limites são usados para moedas diferentes, o que precisaria ser ajustado em um sistema real. 
