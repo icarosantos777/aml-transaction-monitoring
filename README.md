@@ -27,7 +27,7 @@ A ideia era construir regras transparentes, que um analista de compliance pudess
 | Alert rate | 0,9156% | 0,4981% | **1,3516%** |
 | Precision lift | 12,62x | 10,90x | **12,57x** |
 
-Lendo os números: a base completa tem prevalência de lavagem de ~0,10%. As duas regras juntas reduzem o universo de investigação para 1,35% das transações e capturam ~17% dos casos ilícitos, com precision de ~1,3% na fila — uma concentração 12,6 vezes maior do que revisar transações ao acaso.
+Lendo os números: a base completa tem prevalência de lavagem de 0,10%. As duas regras juntas reduzem o universo de investigação para 1,35% das transações e capturam 17% dos casos ilícitos, com precision de 1,3% na fila, uma concentração 12,6 vezes maior do que revisar transações ao acaso.
 
 A precision baixa em termos absolutos é esperada para regras determinísticas de primeira linha em AML. O papel delas não é decidir que houve lavagem, e sim priorizar a fila que vai para investigação humana. Ainda assim, o volume de falsos positivos está listado nas limitações porque há caminhos claros para reduzi-lo (ver "Próximos passos").
 
@@ -50,7 +50,7 @@ flowchart TD
     G --> J[Looker Studio]
 ```
 
-O notebook Python (`notebooks/01_data_intake_and_sample_validation.ipynb`) roda antes de tudo, sobre as primeiras 10.000 linhas do CSV. Ele existe para validar esquema e tipagem — contas preservadas como string, construção do `Transaction_timestamp`, checagem de nulos na conversão de data/hora — antes de subir 9,5 milhões de linhas para o BigQuery. Como as primeiras 10 mil linhas não são amostra aleatória, nenhuma estatística final vem dele; tudo que está na tabela acima foi calculado no BigQuery sobre a base completa.
+O notebook Python (`notebooks/01_data_intake_and_sample_validation.ipynb`) roda antes de tudo, sobre as primeiras 10.000 linhas do CSV. Ele existe para validar esquema e tipagem — contas preservadas como string, construção do `Transaction_timestamp`, checagem de nulos na conversão de data/hora e antes de subir 9,5 milhões de linhas para o BigQuery. Como as primeiras 10 mil linhas não são amostra aleatória, nenhuma estatística final vem dele; tudo que está na tabela acima foi calculado no BigQuery sobre a base completa.
 
 ## As regras
 
@@ -90,8 +90,6 @@ aml-transaction-monitoring-saml-d/
 │   └── 06_dashboard_summary.sql
 ├── docs/
 │   ├── GUIA_REPRODUCAO_PTBR.md
-│   ├── GUIA_DE_ESTUDO_SQL.md
-│   ├── ROTEIRO_ENTREVISTA.md
 │   └── DICIONARIO_DE_DADOS.md
 └── dashboard/
     ├── aml_dashboard.png
