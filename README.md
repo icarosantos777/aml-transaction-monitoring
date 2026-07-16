@@ -80,7 +80,7 @@ aml-transaction-monitoring-saml-d/
 ├── README.md
 ├── CLAUDE.md
 ├── notebooks/
-│   └── 01_data_intake_and_sample_validation.ipynb
+│   └── 01_preliminary_analysis.ipynb
 ├── sql/
 │   ├── 01_staging_view.sql
 │   ├── 02_rule_structuring.sql
