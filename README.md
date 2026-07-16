@@ -29,7 +29,7 @@ A ideia era construir regras transparentes, que um analista de compliance pudess
 
 Lendo os números: a base completa tem prevalência de lavagem de 0,10%. As duas regras juntas reduzem o universo de investigação para 1,35% das transações e capturam 17% dos casos ilícitos, com precision de 1,3% na fila, uma concentração 12,6 vezes maior do que revisar transações ao acaso.
 
-A precision baixa em termos absolutos é esperada para regras determinísticas de primeira linha em AML. O papel delas não é decidir que houve lavagem, e sim priorizar a fila que vai para investigação humana. Ainda assim, o volume de falsos positivos está listado nas limitações porque há caminhos claros para reduzi-lo (ver "Próximos passos").
+A baixa precision é comum em regras iniciais de monitoramento AML. O papel delas é priorizar a fila que vai para investigação humana. Ainda assim, o volume de falsos positivos está listado nas limitações porque há caminhos claros para reduzi-lo (ver "Próximos passos").
 
 ## Arquitetura
 
@@ -56,7 +56,7 @@ O notebook Python (`notebooks/01_preliminary_analysis.ipynb`) analisa as primeir
 
 ### Structuring
 
-Procura uma conta que recebe, na mesma semana e na mesma moeda, valores fragmentados vindos de vários remetentes: pelo menos 3 transações de pelo menos 3 remetentes distintos, somando 10.000 ou mais no total, mas sem nenhuma operação individual acima de 10.000. O limiar de 10.000 espelha o padrão clássico de fracionamento para ficar abaixo de valores de reporte obrigatório — o comportamento que a tipologia de structuring descreve.
+Procura uma conta que recebe, na mesma semana e na mesma moeda, valores fragmentados vindos de vários remetentes: pelo menos 3 transações de pelo menos 3 remetentes distintos, somando 10.000 ou mais no total, mas sem nenhuma operação individual acima de 10.000. O limite de 10.000 foi escolhido com base nos dados do projeto. Ele ajuda a identificar várias operações menores que, juntas, formam um valor relevante. Não é um limite regulatório oficial.
 
 Chave de agrupamento: `receiver_account` + semana + `payment_currency`.
 
