@@ -50,7 +50,7 @@ flowchart TD
     G --> J[Looker Studio]
 ```
 
-O notebook Python (`notebooks/01_preliminary_analysis.ipynb`) analisa as primeiras 10.000 linhas do CSV. Ele existe para validar esquema e tipagem — contas preservadas como string, construção do `Transaction_timestamp`, checagem de nulos na conversão de data/hora e antes de subir 9,5 milhões de linhas para o BigQuery. Como as primeiras 10 mil linhas não são amostra aleatória, nenhuma estatística final vem dele; tudo que está na tabela acima foi calculado no BigQuery sobre a base completa.
+O notebook Python (`notebooks/01_preliminary_analysis.ipynb`) analisa as primeiras 10.000 linhas do CSV. Ele existe para validar esquema e tipagem, contas preservadas como string, construção do `Transaction_timestamp`, checagem de nulos na conversão de data/hora e antes de subir 9,5 milhões de linhas para o BigQuery. Como as primeiras 10 mil linhas não são amostras aleatórias, nenhuma estatística final vem delas; tudo que está na tabela acima foi calculado no BigQuery sobre a base completa.
 
 ## As regras
 
