@@ -1,0 +1,130 @@
+-- =============================================================================
+-- ARQUIVO: 06_dashboard_summary.sql
+-- OBJETIVO:
+--   Preparar uma fonte pequena e pronta para os scorecards do Looker Studio.
+--
+-- ENTRADAS:
+--   alerts
+--   rule_evaluation
+--
+-- SAÍDA:
+--   dashboard_summary
+--
+-- DIFERENÇA ESSENCIAL:
+--   total_alerts         = grupos agregados gerados pelas regras.
+--   alerted_transactions = transações individuais dentro desses grupos.
+-- =============================================================================
+
+CREATE OR REPLACE VIEW
+  `saml-d-aml-monitoring.aml_monitoring.dashboard_summary`
+AS
+
+WITH alert_counts AS (
+  SELECT
+    rule_name,
+    COUNT(*) AS total_alerts
+  FROM
+    `saml-d-aml-monitoring.aml_monitoring.alerts`
+  GROUP BY
+    rule_name
+
+  UNION ALL
+
+  SELECT
+    'ALL_RULES' AS rule_name,
+    COUNT(*) AS total_alerts
+  FROM
+    `saml-d-aml-monitoring.aml_monitoring.alerts`
+)
+
+SELECT
+  evaluation.rule_name,
+
+  alert_counts.total_alerts,
+
+  evaluation.total_transactions,
+
+  evaluation.true_positives
+    + evaluation.false_negatives
+    AS total_illicit_transactions,
+
+  evaluation.total_transactions
+    - evaluation.true_positives
+    - evaluation.false_negatives
+    AS total_normal_transactions,
+
+  evaluation.alerted_transactions,
+
+  evaluation.true_positives,
+  evaluation.false_positives,
+  evaluation.false_negatives,
+  evaluation.true_negatives,
+
+  evaluation.precision,
+  evaluation.recall,
+  evaluation.f1_score,
+  evaluation.alert_rate,
+
+  -- Prevalência de lavagem na base.
+  SAFE_DIVIDE(
+    evaluation.true_positives
+      + evaluation.false_negatives,
+    evaluation.total_transactions
+  ) AS dataset_laundering_rate,
+
+  -- Quantas vezes a fila é mais concentrada em lavagem.
+  SAFE_DIVIDE(
+    evaluation.precision,
+    SAFE_DIVIDE(
+      evaluation.true_positives
+        + evaluation.false_negatives,
+      evaluation.total_transactions
+    )
+  ) AS precision_lift
+
+FROM
+  `saml-d-aml-monitoring.aml_monitoring.rule_evaluation`
+    AS evaluation
+
+LEFT JOIN
+  alert_counts
+USING (rule_name);
+
+
+-- VALIDAÇÃO
+-- ALL_RULES esperado:
+-- total_alerts         = 22.455
+-- alerted_transactions = 128.463
+-- true_positives       = 1.677
+-- precision            = 1,3054%
+-- recall               = 16,9857%
+-- f1_score             = 2,4245%
+-- alert_rate           = 1,3516%
+-- precision_lift       = 12,57x
+SELECT
+  rule_name,
+  total_alerts,
+  total_transactions,
+  total_illicit_transactions,
+  alerted_transactions,
+  true_positives,
+  false_positives,
+  false_negatives,
+
+  ROUND(precision * 100, 4) AS precision_pct,
+  ROUND(recall * 100, 4) AS recall_pct,
+  ROUND(f1_score * 100, 4) AS f1_score_pct,
+  ROUND(alert_rate * 100, 4) AS alert_rate_pct,
+  ROUND(dataset_laundering_rate * 100, 4)
+    AS dataset_laundering_rate_pct,
+  ROUND(precision_lift, 2) AS precision_lift
+
+FROM
+  `saml-d-aml-monitoring.aml_monitoring.dashboard_summary`
+
+ORDER BY
+  CASE rule_name
+    WHEN 'STRUCTURING' THEN 1
+    WHEN 'SMURFING' THEN 2
+    WHEN 'ALL_RULES' THEN 3
+  END;
