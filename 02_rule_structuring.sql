@@ -78,9 +78,6 @@ WHERE
   AND total_amount >= 10000
   AND max_individual_amount <= 10000;
 
-
--- VALIDAÇÃO
--- Esperado: 8.754 alertas agregados.
 SELECT
   COUNT(*) AS total_alerts
 FROM
