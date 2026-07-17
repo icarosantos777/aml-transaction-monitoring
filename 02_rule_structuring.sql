@@ -1,23 +1,3 @@
--- =============================================================================
--- ARQUIVO: 02_rule_structuring.sql
--- OBJETIVO:
---   Detectar recebimentos fragmentados de múltiplos remetentes para uma mesma
---   conta durante uma semana.
---
--- ENTRADA: stg_transactions
--- SAÍDA:   rule_structuring
---
--- UNIDADE DO ALERTA:
---   receiver_account + semana + payment_currency
---
--- COMO EXPLICAR:
---   "Agrupei por destinatário, semana e moeda. Depois medi quantidade de
---   transações, remetentes distintos, total acumulado e maior valor individual."
---
--- IMPORTANTE:
---   is_laundering e transaction_pattern não aparecem na regra.
--- =============================================================================
-
 CREATE OR REPLACE VIEW
   `saml-d-aml-monitoring.aml_monitoring.rule_structuring`
 AS
