@@ -1,21 +1,3 @@
--- =============================================================================
--- ARQUIVO: 03_rule_smurfing.sql
--- OBJETIVO:
---   Detectar operações pequenas e recorrentes entre o mesmo remetente e
---   destinatário, distribuídas por vários dias da semana.
---
--- ENTRADA: stg_transactions
--- SAÍDA:   rule_smurfing
---
--- UNIDADE DO ALERTA:
---   sender_account + receiver_account + semana + payment_currency
---
--- COMO EXPLICAR:
---   "A regra mede recorrência entre o mesmo par. Os campos active_days e
---   activity_span_hours ajudam a distinguir atividade espalhada ao longo da
---   semana de grandes lotes legítimos concentrados em um único dia."
--- =============================================================================
-
 CREATE OR REPLACE VIEW
   `saml-d-aml-monitoring.aml_monitoring.rule_smurfing`
 AS
@@ -103,7 +85,6 @@ FROM
   pair_weekly_activity
 
 WHERE
-  -- Limiares exploratórios, não regulatórios.
   transaction_count BETWEEN 3 AND 8
   AND active_days >= 3
   AND total_amount BETWEEN 6000 AND 25000
@@ -112,8 +93,6 @@ WHERE
   AND activity_span_hours >= 48;
 
 
--- VALIDAÇÃO
--- Esperado: 13.701 alertas agregados.
 SELECT
   COUNT(*) AS total_alerts
 FROM
