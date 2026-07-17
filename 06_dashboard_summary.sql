@@ -8,11 +8,22 @@
 --   rule_evaluation
 --
 -- SAÍDA:
---   dashboard_summary
+--   dashboard_summary          (bruta, com linhas sobrepostas ALL_RULES/regras)
+--   dashboard_summary_totals   (1 linha ALL_RULES, para scorecards)
+--   dashboard_summary_by_rule  (linhas por regra, para gráficos/detalhamento)
 --
 -- DIFERENÇA ESSENCIAL:
 --   total_alerts         = grupos agregados gerados pelas regras.
 --   alerted_transactions = transações individuais dentro desses grupos.
+--
+-- POR QUE SEPARAR EM DUAS VIEWS:
+--   dashboard_summary mistura, na mesma coluna rule_name, o total geral
+--   (ALL_RULES) e as regras atômicas (STRUCTURING, SMURFING). Um scorecard
+--   do Looker Studio que agregue essa view sem filtrar por rule_name (ex.:
+--   SUM(total_alerts)) soma o total junto com as partes, duplicando o
+--   resultado. Separando em duas views, os scorecards de total usam
+--   dashboard_summary_totals (uma única linha, impossível somar errado) e
+--   o controle "Filtrar por regra" nem alcança essa fonte.
 -- =============================================================================
 
 CREATE OR REPLACE VIEW
@@ -89,6 +100,26 @@ FROM
 LEFT JOIN
   alert_counts
 USING (rule_name);
+
+
+-- dashboard_summary_totals: UMA linha (ALL_RULES), à prova de SUM.
+-- Fonte dos scorecards de total no Looker Studio.
+CREATE OR REPLACE VIEW
+  `saml-d-aml-monitoring.aml_monitoring.dashboard_summary_totals`
+AS
+SELECT *
+FROM `saml-d-aml-monitoring.aml_monitoring.dashboard_summary`
+WHERE rule_name = 'ALL_RULES';
+
+
+-- dashboard_summary_by_rule: só as regras atômicas.
+-- Fonte dos gráficos por regra e do controle "Filtrar por regra".
+CREATE OR REPLACE VIEW
+  `saml-d-aml-monitoring.aml_monitoring.dashboard_summary_by_rule`
+AS
+SELECT *
+FROM `saml-d-aml-monitoring.aml_monitoring.dashboard_summary`
+WHERE rule_name IN ('STRUCTURING', 'SMURFING');
 
 
 -- VALIDAÇÃO
