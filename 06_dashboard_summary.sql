@@ -22,8 +22,10 @@
 --   do Looker Studio que agregue essa view sem filtrar por rule_name (ex.:
 --   SUM(total_alerts)) soma o total junto com as partes, duplicando o
 --   resultado. Separando em duas views, os scorecards de total usam
---   dashboard_summary_totals (uma única linha, impossível somar errado) e
---   o controle "Filtrar por regra" nem alcança essa fonte.
+--   dashboard_summary_totals (uma única linha, sem a coluna rule_name) e
+--   o controle "Filtrar por regra" nem alcança essa fonte — não existe
+--   campo para filtrar, o que também blinda contra escopo de
+--   página/relatório no Looker Studio.
 -- =============================================================================
 
 CREATE OR REPLACE VIEW
@@ -102,12 +104,29 @@ LEFT JOIN
 USING (rule_name);
 
 
--- dashboard_summary_totals: UMA linha (ALL_RULES), à prova de SUM.
--- Fonte dos scorecards de total no Looker Studio.
+-- dashboard_summary_totals: UMA linha (ALL_RULES), à prova de SUM e de
+-- escopo de página/relatório no Looker Studio. Sem a coluna rule_name,
+-- nenhum controle de filtro tem campo para alcançar estes scorecards,
+-- mesmo com "Tornar no nível do relatório" habilitado.
 CREATE OR REPLACE VIEW
   `saml-d-aml-monitoring.aml_monitoring.dashboard_summary_totals`
 AS
-SELECT *
+SELECT
+  total_alerts,
+  total_transactions,
+  total_illicit_transactions,
+  total_normal_transactions,
+  alerted_transactions,
+  true_positives,
+  false_positives,
+  false_negatives,
+  true_negatives,
+  precision,
+  recall,
+  f1_score,
+  alert_rate,
+  dataset_laundering_rate,
+  precision_lift
 FROM `saml-d-aml-monitoring.aml_monitoring.dashboard_summary`
 WHERE rule_name = 'ALL_RULES';
 
