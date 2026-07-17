@@ -1,23 +1,3 @@
--- =============================================================================
--- ARQUIVO: 04_alerts_view.sql
--- OBJETIVO:
---   Unificar os alertas das duas regras em uma única estrutura.
---
--- ENTRADAS:
---   rule_structuring
---   rule_smurfing
---
--- SAÍDA:
---   alerts
---
--- COMO EXPLICAR:
---   "Usei UNION ALL para empilhar as duas filas. Como cada regra possui alguns
---   campos exclusivos, usei NULL tipado onde o campo não se aplica."
---
--- POR QUE UNION ALL?
---   Mantém todas as linhas e não gasta processamento tentando remover duplicatas.
--- =============================================================================
-
 CREATE OR REPLACE VIEW
   `saml-d-aml-monitoring.aml_monitoring.alerts`
 AS
@@ -85,11 +65,6 @@ FROM
   `saml-d-aml-monitoring.aml_monitoring.rule_smurfing`;
 
 
--- VALIDAÇÃO
--- Esperado:
---   SMURFING    = 13.701
---   STRUCTURING =  8.754
---   TOTAL       = 22.455
 SELECT
   rule_name,
   COUNT(*) AS total_alerts
