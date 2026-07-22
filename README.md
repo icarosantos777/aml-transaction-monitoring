@@ -4,7 +4,7 @@ MVP de ponta a ponta para monitoramento transacional AML/PLD, desenvolvido
 com Python, BigQuery e Looker Studio sobre aproximadamente 9,5 milhões de
 transações sintéticas do SAML-D.
 
-Dashboards: 
+Dashboards: https://datastudio.google.com/reporting/d59145f5-ed68-4db2-8c0f-c24d8232ec25
 
 O projeto implementa duas regras SQL explicáveis, avalia seu desempenho sem
 target leakage e transforma os resultados em uma fila priorizada de alertas
